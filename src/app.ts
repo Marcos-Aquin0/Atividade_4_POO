@@ -12,18 +12,42 @@ export class App {
         return this.users.find(user => user.email === email)
     }
 
-    registerUser(user: User): string {
+    AutenticarUsuario(user: User, help: number, email?: string, password?: string): string | void {
+        //help = 1 - login; = 0 - signup
+        if(!help){
+            return this.SignUp(user)
+        }
+        else {
+            return this.LogIn(user, email, password)
+        }
+    }
+
+    SignUp(user: User): string | void{
         for (const rUser of this.users) {
             if (rUser.email === user.email) {
-                throw new Error('Duplicate user.')
+                // throw new Error('Duplicate user. Please use another email or log in')
+                console.log('Duplicate user. Please use another email or log in')
+                return 
             }
         }
         const newId = crypto.randomUUID()
         user.id = newId
         this.users.push(user)
+        console.log ('Usuario ' + user.name + ' cadastrado')
         return newId
     }
-    //cadastro - login - password ---- autenticacao de usuario
+
+    LogIn(user: User, email: string, password: string){
+        for (const rUser of this.users) {
+            if (email === user.email) {
+                if(password === user.password)
+                    console.log ("Usuario autenticado")
+                    return
+            }
+        }
+        // throw new Error('Tente novamente. Email e/ou senha incorretos')
+        console.log('Tente novamente. Email e/ou senha incorretos')
+    }
 
     registerBike(bike: Bike): string {
         const newId = crypto.randomUUID()
@@ -95,6 +119,4 @@ export class App {
             console.log("Nº", a, rRent)
         }
     }
-
-
 }
